@@ -87,7 +87,11 @@ public class TestDataAccess {
 				return e.DoesQuestionExists(q.getQuestion());
 			} else 
 			return false;
-			
+		}
+		public void persist(Object a) {
+			db.getTransaction().begin();
+			db.persist(a);
+			db.getTransaction().commit();
 		}
 }
 
