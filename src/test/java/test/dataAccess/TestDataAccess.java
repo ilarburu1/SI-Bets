@@ -9,6 +9,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import configuration.ConfigXML;
+import domain.Aukera;
+import domain.Erregistratua;
 import domain.Event;
 import domain.Question;
 
@@ -88,10 +90,53 @@ public class TestDataAccess {
 			} else 
 			return false;
 		}
-		public void persist(Object a) {
+		
+		
+		public void persistErreg(Erregistratua a) {
 			db.getTransaction().begin();
-			db.persist(a);
-			db.getTransaction().commit();
+			try {
+				db.persist(a);
+				System.out.println("hona bai");
+				db.getTransaction().commit();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		
+		public void persistAuk(Aukera a) {
+			db.getTransaction().begin();
+			try {
+				db.persist(a);
+				db.getTransaction().commit();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
+
+		public boolean removeErreg(Erregistratua erab) {
+			Erregistratua e = db.find(Erregistratua.class, erab);
+			if(e!=null) {
+				db.getTransaction().begin();
+				db.remove(e);
+				db.getTransaction().commit();
+				return true;
+			}else {
+				return false;
+			}
+		}
+		
+		public boolean removeAuk(Aukera auk) {
+			Aukera a = db.find(Aukera.class, auk);
+			if(a!=null) {
+				db.getTransaction().begin();
+				db.remove(a);
+				db.getTransaction().commit();
+				return true;
+			}else {
+				return false;
+			}
 		}
 }
 
