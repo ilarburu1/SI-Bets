@@ -138,6 +138,16 @@ public class TestDataAccess {
 				e.printStackTrace();
 			}
 		}
+		
+		public void persistEvent(Event ev) {
+			db.getTransaction().begin();
+			try {
+				db.persist(ev);
+				db.getTransaction().commit();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
 
 
 		public boolean removeErreg(Erregistratua erab) {
@@ -215,4 +225,5 @@ public class TestDataAccess {
 				return false;
 			}
 		}
+		
 }
