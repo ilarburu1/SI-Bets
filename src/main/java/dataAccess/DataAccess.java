@@ -335,7 +335,7 @@ public boolean existQuestion(Event event, String question) {
 	
 	
 
-	public User isLogin(String log, String password) {
+public User isLogin(String log, String password) {
 	    
 		db.getTransaction().begin();
 		User user = db.find(domain.Erregistratua.class, log );
@@ -345,13 +345,14 @@ public boolean existQuestion(Event event, String question) {
 				Date data = new Date();
 				if( ((Erregistratua)user).getBanEndDate().compareTo(data)<=0) {
 					((Erregistratua)user).setBanned(false);
-					db.getTransaction().commit();
 				}
 			}
+			db.getTransaction().commit();
 			return user;
 		}else {
 			user = db.find(domain.Editorea.class, log);
 			if(user!=null){
+				db.getTransaction().commit();
 				return user;
 			}else {
 				user = db.find(domain.Admin.class, log);
@@ -359,7 +360,6 @@ public boolean existQuestion(Event event, String question) {
 		}
 		db.getTransaction().commit();
 		return user;
-		
 	}
 	
 	

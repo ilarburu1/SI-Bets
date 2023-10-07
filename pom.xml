@@ -41,7 +41,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 				<maven.compiler.source>1.8</maven.compiler.source>
 				<sonar.organization>iaramendi0</sonar.organization>
 				<sonar.host.url>https://sonarcloud.io</sonar.host.url>		
-				<sonar.projectKey>iaramendi0_SI-Bets</sonar.	projectKey>		
+				<sonar.projectKey>iaramendi0_SI-Bets</sonar.projectKey>		
 				<sonar.login>6b4cd8de33d1e7a241d160fc7d364897a9df6bd4</sonar.login>
 </properties>
 <!-- https://mvnrepository.com/artifact/junit/junit	-->

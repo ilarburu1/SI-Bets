@@ -9,10 +9,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import configuration.ConfigXML;
+import domain.Admin;
 import domain.Aukera;
+import domain.Editorea;
 import domain.Erregistratua;
 import domain.Event;
 import domain.Question;
+import domain.User;
 
 public class TestDataAccess {
 	protected  EntityManager  db;
@@ -103,6 +106,28 @@ public class TestDataAccess {
 			}
 		}
 		
+		public void persistAdmin(Admin a) {
+			db.getTransaction().begin();
+			try {
+				db.persist(a);
+				System.out.println("hona bai");
+				db.getTransaction().commit();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		public void persistEditor(Editorea a) {
+			db.getTransaction().begin();
+			try {
+				db.persist(a);
+				System.out.println("hona bai");
+				db.getTransaction().commit();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 		
 		public void persistAuk(Aukera a) {
 			db.getTransaction().begin();
@@ -127,6 +152,58 @@ public class TestDataAccess {
 			}
 		}
 		
+		public boolean removeUser(User erab) {
+			User e = db.find(User.class, erab);
+			if(e!=null) {
+				db.getTransaction().begin();
+				db.remove(e);
+				db.getTransaction().commit();
+				return true;
+			}else {
+				return false;
+			}
+		}
+		
+		public boolean removeAdmin(Admin erab) {
+			Admin e = db.find(Admin.class, erab);
+			if(e!=null) {
+				db.getTransaction().begin();
+				db.remove(e);
+				db.getTransaction().commit();
+				this.removeUser(erab);
+				return true;
+			}else {
+				return false;
+			}
+		}
+		
+		public boolean removeEditor(Editorea erab) {
+			Editorea e = db.find(Editorea.class, erab);
+			if(e!=null) {
+				db.getTransaction().begin();
+				db.remove(e);
+				db.getTransaction().commit();
+				this.removeUser(erab);
+				
+				return true;
+			}else {
+				return false;
+			}
+		}
+		
+		public boolean removeErregistratua(Erregistratua erab) {
+			Erregistratua e = db.find(Erregistratua.class, erab);
+			if(e!=null) {
+				db.getTransaction().begin();
+				db.remove(e);
+				db.getTransaction().commit();
+				this.removeUser(erab);
+				return true;
+			}else {
+				return false;
+			}
+		}
+		
 		public boolean removeAuk(Aukera auk) {
 			Aukera a = db.find(Aukera.class, auk);
 			if(a!=null) {
@@ -139,4 +216,3 @@ public class TestDataAccess {
 			}
 		}
 }
-
