@@ -69,33 +69,67 @@ public class findQuestionDAWTest {
 	}
 	
 	//Galdera ebentuan dago
-		@Test
-		public void test3() {
-			eventNumber=17;
-			description="Barsa-Real Madrid";
-			expected=new Question(1,"Zenbat gol?");
-			try {
-				SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
-				eventDate=sdf.parse("2023/02/15");
-				ev= new Event(eventNumber,description,eventDate);
-				ev.addQuestion2(expected);
+	@Test
+	public void test3() {
+
+		eventNumber=17;
+		description="Barsa-Real Madrid";
+		expected=new Question(1,"Zenbat gol?");
+		try {
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+			eventDate=sdf.parse("2023/01/15");
+			ev= new Event(eventNumber,description,eventDate);
+			ev.addQuestion2(expected);
 				
-				testDA.open();
-				testDA.persistEvent(ev);
-				testDA.close();
-				System.out.println("honaino bai");
-				obtained=sut.findQuestion(ev, "Zenbat gol?");
-				assertEquals(expected.getQuestion(),obtained.getQuestion());
-			}catch(ParseException e) {
-				e.getMessage();
-			}catch(Exception a) {
-				a.getMessage();
-				fail("Not yet implemented");
-			}finally {
-				testDA.open();
-				testDA.removeEvent(ev);
-				testDA.close();
-			}
+			testDA.open();
+			testDA.persistEvent(ev);
+			testDA.close();
+			System.out.println("honaino bai");
+			obtained=sut.findQuestion(ev, "Zenbat gol?");
+			assertEquals(expected.getQuestion(),obtained.getQuestion());
+		}catch(ParseException e) {
+			e.getMessage();
+		}catch(Exception a) {
+			a.getMessage();
+			fail("Not yet implemented");
+		}finally {
+			testDA.open();
+			testDA.removeEvent(ev);
+			testDA.removeQuestion(expected);
+			testDA.close();
 		}
+	}
+	
+	@Test
+	public void test4() {
+		eventNumber=16;
+		description="Barsa-Real Madrid";
+		expected=new Question(1,"Nork irabaziko du");
+		Question galdera= new Question(2,"Zenbat gol?");
+		try {
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+			eventDate=sdf.parse("2023/02/15");
+			ev= new Event(eventNumber,description,eventDate);
+			ev.addQuestion2(galdera);
+			
+			testDA.open();
+			testDA.persistEvent(ev);
+			testDA.close();
+			System.out.println("honaino bai");
+			obtained=sut.findQuestion(ev, "Nork irabaziko du?");
+			assertNull(obtained);
+		}catch(ParseException e) {
+			e.getMessage();
+		}catch(Exception a) {
+			a.getMessage();
+			fail("Not yet implemented");
+		}finally {
+			testDA.open();
+			testDA.removeEvent(ev);
+			testDA.removeQuestion(expected);
+			testDA.removeQuestion(galdera);
+			testDA.close();
+		}
+	}
 
 }

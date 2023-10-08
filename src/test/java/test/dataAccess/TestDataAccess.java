@@ -226,4 +226,15 @@ public class TestDataAccess {
 			}
 		}
 		
+		public boolean removeQuestion(Question q) {
+			System.out.println(">> DataAccessTest: removeEvent");
+			Question e = db.find(Question.class, q);
+			if (e!=null) {
+				db.getTransaction().begin();
+				db.remove(e);
+				db.getTransaction().commit();
+				return true;
+			} else 
+			return false;
+	    }
 }
