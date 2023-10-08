@@ -226,7 +226,7 @@ public class BetGUI extends JFrame {
 		textPane_DiruKopurua.setBackground(Color.WHITE);
 		textPane_DiruKopurua.setBounds(523, 570, 102, 19);
 		getContentPane().add(textPane_DiruKopurua);
-		textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "€");
+		textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "ï¿½");
 		textPane_DiruKopurua.setEditable(false);
 		
 		
@@ -363,7 +363,7 @@ public class BetGUI extends JFrame {
 					apostua.addAukera(hautatutakoAukera);
 					negozioLogika.addBet(hautatutakoAukera,apostua);
 					textPane.setText("Apostua ondo burutu da!!");
-					textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "€");
+					textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "ï¿½");
 					textField.setText("");
 					System.out.println(question.getBetMinimum());
 				}
@@ -524,7 +524,7 @@ public class BetGUI extends JFrame {
 				
 				Erregistratua erreg = negozioLogika.erregistratuaItzuli(log);
 				if(erreg.getKontuDirua() >= zenbatekoa) {
-					if(diruaEditatu==true) {
+					if(diruaEditatu) {
 						apostua= new Apustua(log,zenbatekoa);
 					}   
 						apostua.addAukera(hautatutakoAukera);
@@ -551,7 +551,7 @@ public class BetGUI extends JFrame {
 				    if(kont>1) {
 				    	hautatutakoAukera.setAzkenaDa(true);
 				    	negozioLogika.addBet(hautatutakoAukera,apostua);
-						textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "€");
+						textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "ï¿½");
 						textField.setText("");
 						textPane.setText("Apostu anitza ondo burutu da!!");
 

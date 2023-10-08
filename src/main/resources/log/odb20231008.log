@@ -606,3 +606,41 @@ Type domain.Admin is not enhanced.
 [2023-10-08 10:19:12 #12 type] 
 Type domain.Editorea is not enhanced.
 
+------------------------------------------------------------------------------------------------------------------------
+
+[2023-10-08 13:33:03 #1 store] 
+Database 'C:\Users\iaram\git\SI-Bet\src\main\resources\bets.temp' has been recovered (tr. 287-313)
+
+[2023-10-08 13:33:03 #2 store] 
+Database 'C:\Users\iaram\git\SI-Bet\src\main\resources\bets.temp' is opened by 25396@LAPTOP-QG7DD9CE
+
+[2023-10-08 13:33:03 #3 type] 
+Type domain.Event is not enhanced.
+
+[2023-10-08 13:33:03 #4 type] 
+Type domain.Question is not enhanced.
+
+[2023-10-08 13:33:03 #5 type] 
+Type domain.Aukera is not enhanced.
+
+[2023-10-08 13:33:03 #6 type] 
+Type domain.Apustua is not enhanced.
+
+[2023-10-08 13:33:03 #7 type] 
+Type domain.User is not enhanced.
+
+[2023-10-08 13:33:03 #8 type] 
+Type domain.Erregistratua is not enhanced.
+
+[2023-10-08 13:33:03 #9 type] 
+Type domain.Mezua is not enhanced.
+
+[2023-10-08 13:33:03 #10 type] 
+Type domain.Mugimendua is not enhanced.
+
+[2023-10-08 13:33:03 #11 type] 
+Type domain.Admin is not enhanced.
+
+[2023-10-08 13:33:03 #12 type] 
+Type domain.Editorea is not enhanced.
+
