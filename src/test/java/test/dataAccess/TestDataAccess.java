@@ -99,10 +99,12 @@ public class TestDataAccess {
 			db.getTransaction().begin();
 			try {
 				db.persist(a);
-				System.out.println("hona bai");
 				db.getTransaction().commit();
 			}catch (Exception e){
 				e.printStackTrace();
+				 if (db.getTransaction().isActive()) {
+			            db.getTransaction().rollback();
+			        }
 			}
 		}
 		
@@ -114,6 +116,9 @@ public class TestDataAccess {
 				db.getTransaction().commit();
 			}catch (Exception e){
 				e.printStackTrace();
+				 if (db.getTransaction().isActive()) {
+			            db.getTransaction().rollback();
+			        }
 			}
 		}
 		
@@ -151,7 +156,7 @@ public class TestDataAccess {
 
 
 		public boolean removeErreg(Erregistratua erab) {
-			Erregistratua e = db.find(Erregistratua.class, erab);
+			Erregistratua e = db.find(Erregistratua.class, erab.getUser());
 			if(e!=null) {
 				db.getTransaction().begin();
 				db.remove(e);
@@ -163,7 +168,7 @@ public class TestDataAccess {
 		}
 		
 		public boolean removeUser(User erab) {
-			User e = db.find(User.class, erab);
+			User e = db.find(User.class, erab.getUser());
 			if(e!=null) {
 				db.getTransaction().begin();
 				db.remove(e);
