@@ -243,6 +243,7 @@ public class isLoginDABTest {
 			((Erregistratua)user).setBanned(true);
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
 			Date d1=sdf.parse("2024/07/15");
+			((Erregistratua)user).setBanEndDate(d1);
 			
 			//invoke System Under Test (sut)  
 			User obtained=sut.isLogin(user.getUser(),user.getPassword());
