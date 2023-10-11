@@ -3,6 +3,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,7 +13,9 @@ import dataAccess.DataAccess;
 import domain.Admin;
 import domain.Editorea;
 import domain.Erregistratua;
+import domain.Question;
 import domain.User;
+import exceptions.QuestionAlreadyExist;
 import test.dataAccess.TestDataAccess;
 
 public class isLoginDABTest {
@@ -94,7 +97,7 @@ public class isLoginDABTest {
 			} finally {
 				  //Remove the created objects in the database (cascade removing)   
 		      //     System.out.println("Finally "+b);          
-		        }
+		    }
 	}
 
 	@Test
@@ -225,25 +228,26 @@ public class isLoginDABTest {
 	}
 	
 	@Test
-	//Izena eta pasahitza DBan daud, erregistratua motakoa da eta baneatua dago baina ez da pasa baneoa kentzeko data.
+	//Izena eta pasahitza DBan daude, erregistratua motakoa da eta baneatua dago baina ez da pasa baneoa kentzeko data.
 	public void test6() {
 		try {
 			
 			//define paramaters
-			log="Patxi";
-			password="7";
+			log="Joxe";
+			password="8";
 			String nan="12345678A";
 			Double dirua=0.0;
 			
 
 			//configure the state of the system (create object in the dabatase)
-			testDA.open();
-			user=testDA.addErregistratua(log,password,nan,dirua);
-			testDA.close();
+			user= new Erregistratua(log,password,nan,dirua);
 			((Erregistratua)user).setBanned(true);
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
 			Date d1=sdf.parse("2024/07/15");
 			((Erregistratua)user).setBanEndDate(d1);
+			testDA.open();
+			testDA.persistErreg(((Erregistratua)user));
+			testDA.close();
 			
 			//invoke System Under Test (sut)  
 			User obtained=sut.isLogin(user.getUser(),user.getPassword());
@@ -252,7 +256,7 @@ public class isLoginDABTest {
 			assertTrue(obtained!=null);
 			assertEquals(obtained.getUser(),user.getUser());
 			assertEquals(obtained.getPassword(),user.getPassword());
-			assertFalse(((Erregistratua)obtained).isBanned());
+			assertEquals(((Erregistratua)obtained).isBanned(),true);
 			
 			//datubasean dago
 			testDA.open();
@@ -260,7 +264,9 @@ public class isLoginDABTest {
 			assertTrue(exist);
 			testDA.close();
 			
-		   } catch (Exception e) {
+		   }catch(ParseException e) {
+				e.getMessage();
+		   }catch (Exception e) {
 			// TODO Auto-generated catch block
 			// if the program goes to this point fail  
 			fail();
@@ -270,7 +276,72 @@ public class isLoginDABTest {
 		          testDA.removeErreg(((Erregistratua)user));
 		          testDA.close();
 		      //     System.out.println("Finally "+b);          
-		        }
+		     }
 	}
+	
+	@Test
+	//Izena null da.
+	public void test7() {
+		try {
+			
+			//define paramaters
+			log=null;
+			password="9";
+
+			
+			//invoke System Under Test (sut)  
+			sut.isLogin(log,password);
+			
+			//verify the results
+			fail();
+			
+		   }catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			// if the program goes to this point fail  
+			assertTrue(true);
+			}
+	}
+	@Test
+	//Pasahitza null da.
+	public void test8() {
+		try {
+			
+			//define paramaters
+			log="Jose";
+			password=null;
+			String nan="12345678A";
+			Double dirua=0.0;
+			//configure the state of the system (create object in the dabatase)
+			testDA.open();
+			user = testDA.addErregistratua(log, password, nan, dirua);
+			testDA.close();			
+			
+			//invoke System Under Test (sut)  
+			User obtained=sut.isLogin(user.getUser(), user.getPassword());
+			
+			
+			//verify the results
+			assertTrue(obtained!=null);
+			
+			
+			//q datubasean dago
+			testDA.open();
+			boolean exist = testDA.existErreg(((Erregistratua)user));
+				
+			assertTrue(!exist);
+			testDA.close();
+			
+		   } catch (Exception e) {
+			// TODO Auto-generated catch block
+			// if the program goes to this point fail  
+			fail();
+			} finally {
+				  //Remove the created objects in the database (cascade removing)   
+				testDA.open();
+		          boolean b=testDA.removeErregistratua(((Erregistratua)user));
+		          testDA.close();
+		      //     System.out.println("Finally "+b);          
+		        }
+		   }
 }
 
