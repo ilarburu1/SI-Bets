@@ -349,7 +349,7 @@ public class CreateQuoteGUI extends JFrame {
 		try {
 			
 			String galderaIzena= (String) tableModelQueries.getValueAt(tableQueries.getSelectedRow(), 1);
-			Question q = negozioLogika.getQuestion(eventua, galderaIzena,0);
+			Question q = negozioLogika.findQuestion(eventua, galderaIzena,0);
 			
 			KuotaEzarriGUI a = new KuotaEzarriGUI(q);
 			a.setVisible(true);
