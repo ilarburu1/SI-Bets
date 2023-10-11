@@ -126,10 +126,54 @@ public class findQuestionDABTest {
 			assertTrue(true);
 		   }
 	}
+	
+	@Test
+	//Ebentua DBan dago baina ez du galderarik.
+	public void test4() {
+		try {
+			
+			//define paramaters
+			int evZenb=17;
+			String des="Real-Real Madrid";
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+			Date d=sdf.parse("2023/04/15");
+			
+			g="Zenbat gol?";
+			ev=new Event(evZenb,des,d);
+			
+			//configure the state of the system (create object in the dabatase)
+			testDA.open();
+			testDA.persistEvent(ev);
+			testDA.close();	
+			
+			//invoke System Under Test (sut)  
+			Question obtained=sut.findQuestion(ev, g);
+			
+			//verify the results
+			assertTrue(obtained==null);
+			assertTrue(ev.getQuestions().isEmpty());
+			//ev datubasean dago
+			testDA.open();
+			boolean exist = testDA.existEvent(ev);
+			assertTrue(exist);
+			testDA.close();
+			
+		   } catch (Exception e) {
+			// TODO Auto-generated catch block
+			// if the program goes to this point fail  
+			fail();
+			} finally {
+				  //Remove the created objects in the database (cascade removing)   
+				  testDA.open();
+		          testDA.removeEvent(ev);
+		          testDA.close();
+		      //     System.out.println("Finally "+b);          
+		        }
+	}
 
 	@Test
 	//Ebentua DBan dago baina galdera ez ebentuan.
-	public void test4() {
+	public void test5() {
 		Question q1=new Question(100,"Zeinek irabazi?");
 		try {
 			
@@ -176,7 +220,7 @@ public class findQuestionDABTest {
 	
 	@Test
 	//Ebentua DBan dago eta galdera ebentuan agertzen da.
-	public void test5() {
+	public void test6() {
 		Question q1=new Question(100,"Zeinek irabazi?");
 		try {
 			
