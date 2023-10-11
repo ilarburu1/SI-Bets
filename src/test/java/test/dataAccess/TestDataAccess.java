@@ -232,7 +232,7 @@ public class TestDataAccess {
 		}
 		
 		public boolean removeQuestion(Question q) {
-			System.out.println(">> DataAccessTest: removeEvent");
+			System.out.println(">> DataAccessTest: removeQuestion");
 			Question e = db.find(Question.class, q);
 			if (e!=null) {
 				db.getTransaction().begin();
@@ -242,4 +242,80 @@ public class TestDataAccess {
 			} else 
 			return false;
 	    }
+		
+		public boolean existErreg(Erregistratua erreg) {
+			System.out.println(">> DataAccessTest: existErreg");
+			Erregistratua e = db.find(Erregistratua.class, erreg.getUser());
+			if (e!=null) {
+				return true;
+			} else 
+			return false;
+		}
+		
+		public Erregistratua addErregistratua(String log,String password,String nan,Double dirua) {
+			System.out.println(">> DataAccessTest: addErregistratua");
+			Erregistratua erreg=null;
+				db.getTransaction().begin();
+				try {
+				    erreg=new Erregistratua(log,password,nan,dirua);
+					db.persist(erreg);
+					db.getTransaction().commit();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+				return erreg;
+	    }
+		
+		public Admin addAdmin(String log,String password) {
+			System.out.println(">> DataAccessTest: addAdmin");
+			Admin a=null;
+				db.getTransaction().begin();
+				try {
+				    a=new Admin(log,password);
+					db.persist(a);
+					db.getTransaction().commit();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+				return a;
+	    }
+		
+
+		public boolean existAdmin(Admin user) {
+			System.out.println(">> DataAccessTest: existAdmin");
+			Admin adm = db.find(Admin.class, user.getUser());
+			if (adm!=null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public Editorea addEditorea(String log,String password) {
+			System.out.println(">> DataAccessTest: addEditorea");
+			Editorea ed=null;
+				db.getTransaction().begin();
+				try {
+				    ed=new Editorea(log,password);
+					db.persist(ed);
+					db.getTransaction().commit();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+				return ed;
+	    }
+		
+
+		public boolean existEditorea(Editorea user) {
+			System.out.println(">> DataAccessTest: existEditorea");
+			Editorea e = db.find(Editorea.class, user.getUser());
+			if (e!=null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 }
