@@ -76,7 +76,7 @@ public interface BLFacade  {
 	@WebMethod public boolean UserExistitzenDa(String user);
 	
 	
-	@WebMethod public Question getQuestion(Event event, String s1, float min);
+	@WebMethod public Question findQuestion(Event event, String s1, float min);
 	
 	
 	@WebMethod public void setKuota(Question question, String auk, float zenbat);

@@ -162,7 +162,7 @@ public BLFacadeImplementation(DataAccess da)  {
     
     
     @WebMethod
-	public Question getQuestion(Event event, String s1, float min) {
+	public Question findQuestion(Event event, String s1, float min) {
     	dbManager.open(false);
 		Question question = dbManager.findQuestion(event,s1);
 		dbManager.close();
