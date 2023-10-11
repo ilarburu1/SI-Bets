@@ -318,4 +318,29 @@ public class TestDataAccess {
 				return false;
 			}
 		}
+		
+		public Event addEvent(int zenb,String des,Date d) {
+			System.out.println(">> DataAccessTest: addEditorea");
+			Event ev=null;
+				db.getTransaction().begin();
+				try {
+				    ev=new Event(zenb,des,d);
+					db.persist(ev);
+					db.getTransaction().commit();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+				return ev;
+	    }
+		
+		public boolean existEvent(Event e) {
+			System.out.println(">> DataAccessTest: existEvent");
+			Event event = db.find(Event.class, e.getEventNumber());
+			if (event!=null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 }

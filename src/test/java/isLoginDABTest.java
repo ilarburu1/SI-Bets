@@ -13,9 +13,7 @@ import dataAccess.DataAccess;
 import domain.Admin;
 import domain.Editorea;
 import domain.Erregistratua;
-import domain.Question;
 import domain.User;
-import exceptions.QuestionAlreadyExist;
 import test.dataAccess.TestDataAccess;
 
 public class isLoginDABTest {
@@ -280,13 +278,64 @@ public class isLoginDABTest {
 	}
 	
 	@Test
-	//Izena null da.
+	//Izena eta pasahitza DBan daude, erregistratua motakoa da eta baneatua dago baina ez da pasa baneoa kentzeko data.
 	public void test7() {
 		try {
 			
 			//define paramaters
-			log=null;
+			log="Jon";
 			password="9";
+			String nan="12345678A";
+			Double dirua=0.0;
+			
+
+			//configure the state of the system (create object in the dabatase)
+			user= new Erregistratua(log,password,nan,dirua);
+			((Erregistratua)user).setBanned(true);
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+			Date d1=sdf.parse("2022/07/15");
+			((Erregistratua)user).setBanEndDate(d1);
+			testDA.open();
+			testDA.persistErreg(((Erregistratua)user));
+			testDA.close();
+			
+			//invoke System Under Test (sut)  
+			User obtained=sut.isLogin(user.getUser(),user.getPassword());
+			
+			//verify the results
+			assertTrue(obtained!=null);
+			assertEquals(obtained.getUser(),user.getUser());
+			assertEquals(obtained.getPassword(),user.getPassword());
+			assertEquals(((Erregistratua)obtained).isBanned(),false);
+			
+			//datubasean dago
+			testDA.open();
+			boolean exist = testDA.existErreg(((Erregistratua)user));
+			assertTrue(exist);
+			testDA.close();
+			
+		   }catch(ParseException e) {
+				e.getMessage();
+		   }catch (Exception e) {
+			// TODO Auto-generated catch block
+			// if the program goes to this point fail  
+			fail();
+			} finally {
+				  //Remove the created objects in the database (cascade removing)   
+				  testDA.open();
+		          testDA.removeErreg(((Erregistratua)user));
+		          testDA.close();
+		      //     System.out.println("Finally "+b);          
+		     }
+	}
+	@Test
+	//Izena null da.
+	public void test8() {
+		try {
+			
+			//define paramaters
+			log=null;
+			password="1234";
 
 			
 			//invoke System Under Test (sut)  
@@ -303,7 +352,7 @@ public class isLoginDABTest {
 	}
 	@Test
 	//Pasahitza null da.
-	public void test8() {
+	public void test9() {
 		try {
 			
 			//define paramaters
@@ -311,26 +360,16 @@ public class isLoginDABTest {
 			password=null;
 			String nan="12345678A";
 			Double dirua=0.0;
-			//configure the state of the system (create object in the dabatase)
-			testDA.open();
-			user = testDA.addErregistratua(log, password, nan, dirua);
-			testDA.close();			
-			
+			user= new Erregistratua(log,password,nan,dirua);
+
 			//invoke System Under Test (sut)  
 			User obtained=sut.isLogin(user.getUser(), user.getPassword());
 			
 			
 			//verify the results
-			assertTrue(obtained!=null);
+			assertTrue(obtained==null);
 			
-			
-			//q datubasean dago
-			testDA.open();
-			boolean exist = testDA.existErreg(((Erregistratua)user));
-				
-			assertTrue(!exist);
-			testDA.close();
-			
+
 		   } catch (Exception e) {
 			// TODO Auto-generated catch block
 			// if the program goes to this point fail  
@@ -338,10 +377,9 @@ public class isLoginDABTest {
 			} finally {
 				  //Remove the created objects in the database (cascade removing)   
 				testDA.open();
-		          boolean b=testDA.removeErregistratua(((Erregistratua)user));
-		          testDA.close();
+		        testDA.removeErregistratua(((Erregistratua)user));
+		        testDA.close();
 		      //     System.out.println("Finally "+b);          
 		        }
 		   }
 }
-

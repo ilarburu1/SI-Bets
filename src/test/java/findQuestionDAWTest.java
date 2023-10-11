@@ -65,7 +65,34 @@ public class findQuestionDAWTest {
 	
 	@Test
 	public void test2() {
-
+		eventNumber=7;
+		description="Barsa-Real Madrid";
+		expected=new Question(1,"Nork irabaziko du");
+		Question galdera= new Question(2,"Zenbat gol sartuko dira?");
+		try {
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+			eventDate=sdf.parse("2023/02/15");
+			ev= new Event(eventNumber,description,eventDate);
+			ev.addQuestion2(galdera);
+			
+			testDA.open();
+			testDA.persistEvent(ev);
+			testDA.close();
+			System.out.println("honaino bai");
+			obtained=sut.findQuestion(ev, "Nork irabaziko du?");
+			assertNull(obtained);
+		}catch(ParseException e) {
+			e.getMessage();
+		}catch(Exception a) {
+			a.getMessage();
+			fail("Not yet implemented");
+		}finally {
+			testDA.open();
+			testDA.removeEvent(ev);
+			testDA.removeQuestion(expected);
+			testDA.removeQuestion(galdera);
+			testDA.close();
+		}
 	}
 	
 	//Galdera ebentuan dago

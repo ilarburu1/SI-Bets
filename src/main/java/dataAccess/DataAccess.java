@@ -338,9 +338,9 @@ public boolean existQuestion(Event event, String question) {
 
 public User isLogin(String log, String password) {
 	    
-		db.getTransaction().begin();
-		User user = db.find(domain.Erregistratua.class, log );
 		
+		User user = db.find(domain.Erregistratua.class, log );
+		db.getTransaction().begin();
 		if(user!=null){
 			if( ((Erregistratua)user).isBanned()==true) {
 				Date data = new Date();
