@@ -402,8 +402,12 @@ public User isLogin(String log, String password) {
      public Question findQuestion(Event event, String galdera) {
  		Event event1 = db.find(domain.Event.class, event);
  		Vector<Question> galderak = event1.getQuestions();
- 		for(Question question:galderak) {
- 			if(question.getQuestion().equals(galdera)) return question;
+ 		if(galderak.isEmpty()) {
+ 			return null;
+ 		}else{
+ 			for(Question question:galderak) {
+ 				if(question.getQuestion().equals(galdera)) return question;
+ 			}
  		}
  		return null;
  	}
