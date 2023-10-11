@@ -59,7 +59,7 @@ public class findQuestionDABTest {
 	//Galdera null da
 	public void test2() {
 		try {
-			int evZenb=7;
+			int evZenb=14;
 			String des="Barsa-Real Madrid";
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
 			Date d=sdf.parse("2023/02/15");
@@ -111,23 +111,20 @@ public class findQuestionDABTest {
 			g="Zenbat gol?";
 			ev=new Event(evZenb,des,d);
 			
+			//invoke System Under Test (sut)  
+			Question obtained=sut.findQuestion(ev, g);
 			
-			//ebentua ez dago datubasean
-			testDA.open();
-			boolean exist = testDA.existEvent(ev);
-			assertFalse(exist);
-			testDA.close();
+			fail();
+
+
 			
 		   }catch(ParseException e) {
 				e.getMessage();
-		   }catch (Exception e) {
+		   }catch (NullPointerException e) {
 			// TODO Auto-generated catch block
 			// if the program goes to this point fail  
-			fail();
-			} finally {
-				  //Remove the created objects in the database (cascade removing)   
-		      //     System.out.println("Finally "+b);          
-		    }
+			assertTrue(true);
+		   }
 	}
 
 	@Test
