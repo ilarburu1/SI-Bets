@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import dataAccess.DataAccess;
@@ -70,8 +72,8 @@ public class addBetDAWTest {
 				fail("Errorea");
 			}finally {
 				testDA.open();
-				testDA.removeErreg(erab2);
-				testDA.removeErreg(erab);
+				testDA.removeErregistratua(erab2);
+				testDA.removeErregistratua(erab);
 				testDA.removeAuk(auk);
 				testDA.close();
 			}
@@ -103,12 +105,153 @@ public class addBetDAWTest {
 				fail("Errorea");
 			}finally {
 				testDA.open();
-				testDA.removeErreg(erab2);
-				testDA.removeErreg(erab);
+				testDA.removeErregistratua(erab2);
+				testDA.removeErregistratua(erab);
 				testDA.removeAuk(auk);
 				testDA.close();
 			}
 		}
+		
+		
+		
+		@Test
+		//DB-n aldaketarik ez
+		public void test4() {
+			Erregistratua erab = new Erregistratua("aaaaa", "bb", "1111111A", 2);
+			Aukera auk = new Aukera(1,"Atletico",2);
+			Aukera auk2 = new Aukera(2, "Erreala", 2);
+			try {
+				testDA.open();
+				testDA.persistErreg(erab);
+				testDA.persistAuk(auk);
+				testDA.close();
+				Apustua apustua = new Apustua("aaaaa", 1);
+				ArrayList<Aukera> lista = new ArrayList<Aukera>();
+				lista.add(auk);
+				lista.add(auk2);
+				apustua.setErantzunak(lista);
+				auk.setAzkenaDa(false);
+				sut.addBet(auk, apustua);
+				assertTrue(true);
+			}catch(Exception a) {
+				a.printStackTrace();
+				fail("Errorea");
+			}finally {
+				testDA.open();
+				testDA.removeErregistratua(erab);
+				testDA.removeAuk(auk);
+				testDA.close();
+			}
+		}
+		
+		
+		@Test
+		//DB-n apustu ainzkoitza gehitzen da. Jarraitzailerik ez du
+		public void test5() {
+			Erregistratua erab = new Erregistratua("aaaaaa", "bb", "1111111A", 2);
+			Aukera auk = new Aukera(1,"Atletico",2);
+			auk.setAzkenaDa(true);
+			Aukera auk2 = new Aukera(2, "Erreala", 2);
+			try {
+				testDA.open();
+				testDA.persistErreg(erab);
+				testDA.persistAuk(auk);
+				testDA.close();
+				Apustua apustua = new Apustua("aaaaaa", 1);
+				ArrayList<Aukera> lista = new ArrayList<Aukera>();
+				lista.add(auk);
+				lista.add(auk2);
+				apustua.setErantzunak(lista);
+				apustua.setErantzunKop(2);
+				auk.setAzkenaDa(true);
+				sut.addBet(auk, apustua);
+				assertTrue(true);
+			}catch(Exception a) {
+				a.printStackTrace();
+				fail("Errorea");
+			}finally {
+				testDA.open();
+				testDA.removeErregistratua(erab);
+				testDA.removeAuk(auk);
+				testDA.removeAuk(auk2);
+				testDA.close();
+			}
+		}
+		
+		
+		@Test
+		//DB-n apustu ainzkoitza gehitzen da. Jarraitzailerik  du
+		public void test6() {
+			Erregistratua erab = new Erregistratua("aaaaaaab", "bb", "1111111A", 2);
+			Erregistratua erab2 = new Erregistratua("bbbbbbbba", "bb", "1111111A", 0);
+			Aukera auk = new Aukera(1,"Atletico",2);
+			Aukera auk2 = new Aukera(2, "Erreala", 2);
+			try {
+				testDA.open();
+				testDA.persistErreg(erab2);
+				erab.addJarraitzailea(erab2.getUser());
+				testDA.persistErreg(erab);
+				testDA.persistAuk(auk);
+				testDA.close();
+				Apustua apustua = new Apustua("aaaaaaab", 1);
+				ArrayList<Aukera> lista = new ArrayList<Aukera>();
+				lista.add(auk);
+				lista.add(auk2);
+				apustua.setErantzunak(lista);
+				apustua.setErantzunKop(2);
+				auk.setAzkenaDa(true);
+				sut.addBet(auk, apustua);
+				assertTrue(true);
+			}catch(Exception a) {
+				a.printStackTrace();
+				fail("Errorea");
+			}finally {
+				testDA.open();
+				testDA.removeErregistratua(erab);
+				testDA.removeErregistratua(erab2);
+				testDA.removeAuk(auk);
+				testDA.close();
+			}
+		}
+		
+		
+		
+		@Test
+		//DB-n apustu ainzkoitza gehitzen da. Jarraitzailerik ez du
+		public void test7() {
+			Erregistratua erab = new Erregistratua("aaaaaaaaa", "bb", "1111111A", 2);
+			Erregistratua erab2 = new Erregistratua("bbbbbbbbb", "bb", "1111111A", 3);
+			erab2.setBanned(false);
+			Aukera auk = new Aukera(1,"Atletico",2);
+			Aukera auk2 = new Aukera(2, "Erreala", 2);
+			erab.addJarraitzailea(erab2.getUser());
+			try {
+				testDA.open();
+				testDA.persistErreg(erab2);
+				testDA.persistErreg(erab);
+				testDA.persistAuk(auk);
+				testDA.close();
+				Apustua apustua = new Apustua("aaaaaaaaa", 1);
+				ArrayList<Aukera> lista = new ArrayList<Aukera>();
+				lista.add(auk);
+				lista.add(auk2);
+				apustua.setErantzunak(lista);
+				apustua.setErantzunKop(2);
+				auk.setAzkenaDa(true);
+				sut.addBet(auk, apustua);
+				assertTrue(true);
+			}catch(Exception a) {
+				a.printStackTrace();
+				fail("Errorea");
+			}finally {
+				testDA.open();
+				testDA.removeErregistratua(erab);
+				testDA.removeErregistratua(erab2);
+				testDA.removeAuk(auk);
+				testDA.close();
+			}
+		}
+		
 
 
 }

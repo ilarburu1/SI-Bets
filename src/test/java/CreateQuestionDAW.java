@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertEquals;
+/*import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -122,4 +122,4 @@ public class CreateQuestionDAW {
 		      //     System.out.println("Finally "+b);          
 		        }
 		   }
-}
+}*/

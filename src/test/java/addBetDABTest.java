@@ -34,7 +34,6 @@ public class addBetDABTest {
 				testDA.persistErreg((Erregistratua) erab);
 				testDA.persistAuk((Aukera) auk);
 				testDA.close();
-				System.out.println("honaino bai");
 				Apustua apustua = new Apustua("aa", 2);
 				sut.addBet(auk, apustua);
 				assertTrue(true);

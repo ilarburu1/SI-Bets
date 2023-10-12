@@ -666,5 +666,13 @@ public User isLogin(String log, String password) {
 	   	 erreg.setBanEndDate(blokeoBukaeraData);	    
 	   	 db.getTransaction().commit();
 	 	}
+
+	public Object find(Class<Erregistratua> class1, String log) {
+		Erregistratua a = (Erregistratua) db.find(Erregistratua.class, log);
+		return a;
+	}
+	
+	
+	
 	
 }
