@@ -39,7 +39,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <properties>
 				<maven.compiler.target>1.8</maven.compiler.target>
 				<maven.compiler.source>1.8</maven.compiler.source>
-				<sonar.organization>iaramendi0</sonar.organization>
+				<sonar.organization>iaramendi0-1</sonar.organization>
 				<sonar.host.url>https://sonarcloud.io</sonar.host.url>		
 				<sonar.projectKey>iaramendi0_SI-Bets</sonar.projectKey>		
 				<sonar.login>6b4cd8de33d1e7a241d160fc7d364897a9df6bd4</sonar.login>
@@ -99,8 +99,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all	-->
 <dependency>
 				 <groupId>org.mockito</groupId>
-				 <artifactId>mockito-core</artifactId>
-				 <version>3.11.2</version>
+				 <artifactId>mockito-all</artifactId>
+				 <version>1.9.5</version>
 				 <scope>test</scope>
 </dependency>
 </dependencies>

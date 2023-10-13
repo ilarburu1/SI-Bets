@@ -101,6 +101,7 @@ public class DataAccess  {
 			Question q6;
 					
 			String irabazlea = "¿Quién ganará el partido?";
+			String winner = "Who will win the match?";
 			if (Locale.getDefault().equals(new Locale("es"))) {
 				q1=ev1.addQuestion(irabazlea,1);
 				q2=ev1.addQuestion("¿Quién meterá el primer gol?",2);
@@ -110,9 +111,9 @@ public class DataAccess  {
 				q6=ev17.addQuestion("¿Habrá goles en la primera parte?",2);
 			}
 			else if (Locale.getDefault().equals(new Locale("en"))) {
-				q1=ev1.addQuestion("Who will win the match?",1);
-				q2=ev1.addQuestion("Who will score first?",2);
-				q3=ev11.addQuestion("Who will win the match?",1);
+				q1=ev1.addQuestion(winner,1);
+				q2=ev1.addQuestion(winner,2);
+				q3=ev11.addQuestion(winner,1);
 				q4=ev11.addQuestion("How many goals will be scored in the match?",2);
 				q5=ev17.addQuestion("Who will win the match?",1);
 				q6=ev17.addQuestion("Will there be goals in the first half?",2);
@@ -342,7 +343,7 @@ public User isLogin(String log, String password) {
 		User user = db.find(domain.Erregistratua.class, log );
 		db.getTransaction().begin();
 		if(user!=null){
-			if( ((Erregistratua)user).isBanned()==true) {
+			if( ((Erregistratua)user).isBanned()) {
 				Date data = new Date();
 				if( ((Erregistratua)user).getBanEndDate().compareTo(data)<=0) {
 					((Erregistratua)user).setBanned(false);

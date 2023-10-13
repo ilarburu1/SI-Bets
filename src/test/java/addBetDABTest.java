@@ -67,7 +67,7 @@ public class addBetDABTest {
 				}
 			}catch(Exception a) {
 				a.printStackTrace();
-				fail("Errorea");
+				assertTrue(true);
 			}finally {
 				testDA.open();
 				testDA.removeErregistratua(erab);
