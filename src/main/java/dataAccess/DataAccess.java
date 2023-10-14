@@ -19,6 +19,7 @@ import configuration.ConfigXML;
 import configuration.UtilDate;
 import domain.Admin;
 import domain.Apustua;
+import domain.ApustuaInfo;
 import domain.Aukera;
 import domain.Editorea;
 import domain.Erregistratua;
@@ -119,11 +120,12 @@ public class DataAccess  {
 				q6=ev17.addQuestion("Will there be goals in the first half?",2);
 			}			
 			else {
-				q1=ev1.addQuestion("Zeinek irabaziko du partidua?",1);
+				String irabazlea2 = "Zeinek irabaziko du partidua?";
+				q1=ev1.addQuestion(irabazlea2,1);
 				q2=ev1.addQuestion("Zeinek sartuko du lehenengo gola?",2);
-				q3=ev11.addQuestion("Zeinek irabaziko du partidua?",1);
+				q3=ev11.addQuestion(irabazlea2,1);
 				q4=ev11.addQuestion("Zenbat gol sartuko dira?",2);
-				q5=ev17.addQuestion("Zeinek irabaziko du partidua?",1);
+				q5=ev17.addQuestion(irabazlea2,1);
 				q6=ev17.addQuestion("Golak sartuko dira lehenengo zatian?",2);
 				
 			}
@@ -460,19 +462,8 @@ public User isLogin(String log, String password) {
 			erreg.setKontuDirua(erreg.getKontuDirua() - apustu.getZenbatekoa());
 			erreg.addApustua(apustu);
 			for(String jarraitzailea: erreg.getJarraitzaileak()) {
-				Erregistratua jarraitzaileaErreg = db.find(domain.Erregistratua.class, jarraitzailea);
-				if(jarraitzaileaErreg.getKontuDirua()>=zenbatekoa && jarraitzaileaErreg.isBanned()==false) {
-					jarraitzaileaErreg.addMovement(m);
-					jarraitzaileaErreg.setKontuDirua(jarraitzaileaErreg.getKontuDirua() - apustu.getZenbatekoa());
-					Apustua jarraitzaileApustua = new Apustua(jarraitzailea,apustu.getZenbatekoa());
-					jarraitzaileApustua.setErantzunak(apustu.getErantzunak());
-					jarraitzaileApustua.setErantzunKop(1);
-					jarraitzaileaErreg.addApustua(jarraitzaileApustua);
-				}else {
-					String deskribapena2=("Ezin izan da Apustua kopiatu. ");
-					Mugimendua m2=new Mugimendua(data,0,deskribapena2);
-					jarraitzaileaErreg.addMovement(m2);
-				}
+				ApustuaInfo a = new ApustuaInfo(apustu, data, zenbatekoa, m, jarraitzailea);
+				jarraitzaileenApustuBakarra(a);
 			}
 			db.persist(apustu);	
 		}else { //apustu Anitza da
@@ -486,24 +477,45 @@ public User isLogin(String log, String password) {
 				erreg.setKontuDirua(erreg.getKontuDirua() - apustu.getZenbatekoa());
 				erreg.addApustua(apustu);
 				for(String jarraitzailea: erreg.getJarraitzaileak()) {
-					Erregistratua jarraitzaileaErreg = db.find(domain.Erregistratua.class, jarraitzailea);
-					if(jarraitzaileaErreg.getKontuDirua()>=zenbatekoa && jarraitzaileaErreg.isBanned()==false) {
-					jarraitzaileaErreg.addMovement(m);
-					jarraitzaileaErreg.setKontuDirua(jarraitzaileaErreg.getKontuDirua() - apustu.getZenbatekoa());
-					Apustua jarraitzaileApustua = new Apustua(jarraitzailea,apustu.getZenbatekoa());
-					jarraitzaileApustua.setErantzunak(apustu.getErantzunak());
-					jarraitzaileApustua.setErantzunKop(apustu.getErantzunak().size());
-					jarraitzaileaErreg.addApustua(jarraitzaileApustua);
-					}else {
-						String deskribapena2=("Ezin izan da Apustua kopiatu. ");
-						Mugimendua m2=new Mugimendua(data,0,deskribapena2);
-						jarraitzaileaErreg.addMovement(m2);
-					}
+					jarraitzaileApustuAnitza(apustu, data, zenbatekoa, m, jarraitzailea);
 				}
 				db.persist(apustu);
 			}
 		}
 		db.getTransaction().commit();
+	}
+
+	private void jarraitzaileApustuAnitza(Apustua apustu, Date data, double zenbatekoa, Mugimendua m,
+			String jarraitzailea) {
+		Erregistratua jarraitzaileaErreg = db.find(domain.Erregistratua.class, jarraitzailea);
+		if(jarraitzaileaErreg.getKontuDirua()>=zenbatekoa && jarraitzaileaErreg.isBanned()==false) {
+		jarraitzaileaErreg.addMovement(m);
+		jarraitzaileaErreg.setKontuDirua(jarraitzaileaErreg.getKontuDirua() - apustu.getZenbatekoa());
+		Apustua jarraitzaileApustua = new Apustua(jarraitzailea,apustu.getZenbatekoa());
+		jarraitzaileApustua.setErantzunak(apustu.getErantzunak());
+		jarraitzaileApustua.setErantzunKop(apustu.getErantzunak().size());
+		jarraitzaileaErreg.addApustua(jarraitzaileApustua);
+		}else {
+			String deskribapena2=("Ezin izan da Apustua kopiatu. ");
+			Mugimendua m2=new Mugimendua(data,0,deskribapena2);
+			jarraitzaileaErreg.addMovement(m2);
+		}
+	}
+
+	private void jarraitzaileenApustuBakarra(ApustuaInfo a) {
+		Erregistratua jarraitzaileaErreg = db.find(domain.Erregistratua.class, a.getJarraitzailea());
+		if(jarraitzaileaErreg.getKontuDirua()>=a.getZenbatekoa() && jarraitzaileaErreg.isBanned()==false) {
+			jarraitzaileaErreg.addMovement(a.getMove());
+			jarraitzaileaErreg.setKontuDirua(jarraitzaileaErreg.getKontuDirua() - a.getApustua().getZenbatekoa());
+			Apustua jarraitzaileApustua = new Apustua((String) a.getJarraitzailea(),(double)a.getApustua().getZenbatekoa());
+			jarraitzaileApustua.setErantzunak(a.getApustua().getErantzunak());
+			jarraitzaileApustua.setErantzunKop(1);
+			jarraitzaileaErreg.addApustua(jarraitzaileApustua);
+		}else {
+			String deskribapena2=("Ezin izan da Apustua kopiatu. ");
+			Mugimendua m2=new Mugimendua(a.getData(),0,deskribapena2);
+			jarraitzaileaErreg.addMovement(m2);
+		}
 	}
 
 	
