@@ -109,13 +109,14 @@ public class ConsultMovementsGUI extends JFrame {
 		this.setTitle(ResourceBundle.getBundle("Etiquetas").getString("MovementsTittle"));
 	}
 	
+	String lokala="Locale: ";
 	private JRadioButton getRdbtnEuskera() {
 		if (rdbtnEuskera == null) {
 			rdbtnEuskera = new JRadioButton(ResourceBundle.getBundle("Etiquetas").getString("ConsultMovementsGUI.rdbtnEuskera.text")); //$NON-NLS-1$ //$NON-NLS-2$
 			rdbtnEuskera.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Locale.setDefault(new Locale("eus"));
-					System.out.println("Locale: "+Locale.getDefault());
+					System.out.println(lokala+Locale.getDefault());
 					redibujar();				}
 			});
 			buttonGroup.add(rdbtnEuskera);
@@ -128,7 +129,7 @@ public class ConsultMovementsGUI extends JFrame {
 			rdbtnCastellano.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					Locale.setDefault(new Locale("es"));
-					System.out.println("Locale: "+Locale.getDefault());
+					System.out.println(lokala+Locale.getDefault());
 					redibujar();				}
 			});
 			buttonGroup.add(rdbtnCastellano);
@@ -142,7 +143,7 @@ public class ConsultMovementsGUI extends JFrame {
 			rdbtnEnglish.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Locale.setDefault(new Locale("en"));
-					System.out.println("Locale: "+Locale.getDefault());
+					System.out.println(lokala+Locale.getDefault());
 					redibujar();
 				}
 			});
@@ -199,7 +200,7 @@ public class ConsultMovementsGUI extends JFrame {
 	private JTextPane getTextPane_DiruKopurua() {
 		if (textPane_DiruKopurua == null) {
 			textPane_DiruKopurua = new JTextPane();
-			textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "€");
+			textPane_DiruKopurua.setText(String.valueOf(negozioLogika.erregistratuaItzuli(log).getKontuDirua()) + "ï¿½");
 			textPane_DiruKopurua.setEditable(false);
 			textPane_DiruKopurua.setBackground(Color.WHITE);
 			textPane_DiruKopurua.setBounds(341, 203, 102, 19);

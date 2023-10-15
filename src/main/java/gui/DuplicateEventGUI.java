@@ -7,7 +7,6 @@ import com.toedter.calendar.JCalendar;
 
 import domain.Apustua;
 import domain.Aukera;
-import domain.Erregistratua;
 import domain.Question;
 import javax.swing.*;
 import java.awt.*;

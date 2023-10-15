@@ -272,7 +272,7 @@ public class BetGUI extends JFrame {
 				tableModelAukerak.setDataVector(null, columnNamesAukerak);
 				tableModelAukerak.setColumnCount(4); // another column added to allocate aukera objects
 				
-				if(aukerak.size()==0) {
+				if(aukerak.isEmpty()) {
 			        textPane.setText("Galdera honek ez du aukerarik");
 		         }
 				

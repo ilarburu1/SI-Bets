@@ -95,38 +95,36 @@ public class DataAccess  {
 			Event ev20=new Event(20, "Betis-Real Madrid", UtilDate.newDate(year,month+1,28));
 			
 			Question q1;
-			Question q2;
 			Question q3;
 			Question q4;
 			Question q5;
-			Question q6;
 					
 			String irabazlea = "¿Quién ganará el partido?";
 			String winner = "Who will win the match?";
 			if (Locale.getDefault().equals(new Locale("es"))) {
 				q1=ev1.addQuestion(irabazlea,1);
-				q2=ev1.addQuestion("¿Quién meterá el primer gol?",2);
+				ev1.addQuestion("¿Quién meterá el primer gol?",2);
 				q3=ev11.addQuestion(irabazlea,1);
 				q4=ev11.addQuestion("¿Cuántos goles se marcarán?",2);
 				q5=ev17.addQuestion(irabazlea,1);
-				q6=ev17.addQuestion("¿Habrá goles en la primera parte?",2);
+				ev17.addQuestion("¿Habrá goles en la primera parte?",2);
 			}
 			else if (Locale.getDefault().equals(new Locale("en"))) {
 				q1=ev1.addQuestion(winner,1);
-				q2=ev1.addQuestion(winner,2);
+				ev1.addQuestion(winner,2);
 				q3=ev11.addQuestion(winner,1);
 				q4=ev11.addQuestion("How many goals will be scored in the match?",2);
 				q5=ev17.addQuestion("Who will win the match?",1);
-				q6=ev17.addQuestion("Will there be goals in the first half?",2);
+				ev17.addQuestion("Will there be goals in the first half?",2);
 			}			
 			else {
 				String irabazlea2 = "Zeinek irabaziko du partidua?";
 				q1=ev1.addQuestion(irabazlea2,1);
-				q2=ev1.addQuestion("Zeinek sartuko du lehenengo gola?",2);
+				ev1.addQuestion("Zeinek sartuko du lehenengo gola?",2);
 				q3=ev11.addQuestion(irabazlea2,1);
 				q4=ev11.addQuestion("Zenbat gol sartuko dira?",2);
 				q5=ev17.addQuestion(irabazlea2,1);
-				q6=ev17.addQuestion("Golak sartuko dira lehenengo zatian?",2);
+				ev17.addQuestion("Golak sartuko dira lehenengo zatian?",2);
 				
 			}
 			
@@ -201,16 +199,7 @@ public class DataAccess  {
 	        
 			User admin = new Admin("adminAmets","1");
 			db.persist(admin);
-			/*
-			Date data = new Date();
-			Mezua m2=new Mezua(data,"intza","Nola egin dezaket apustu anitz bat?");
-			((Admin)admin).addMezua(m2);
-			db.persist(m2);
-			Mezua m=new Mezua(data,"ibai","LOTXAGABE BATZUK ZARETE!!!!");
-			((Admin)admin).addMezua(m);
-			db.persist(m);
-			*/
-			
+
 			User editor1 = new Editorea("editorErik","1");
 			db.persist(editor1);
 			
@@ -477,7 +466,8 @@ public User isLogin(String log, String password) {
 				erreg.setKontuDirua(erreg.getKontuDirua() - apustu.getZenbatekoa());
 				erreg.addApustua(apustu);
 				for(String jarraitzailea: erreg.getJarraitzaileak()) {
-					jarraitzaileApustuAnitza(apustu, data, zenbatekoa, m, jarraitzailea);
+					ApustuaInfo a2 = new ApustuaInfo(apustu, data, zenbatekoa, m, jarraitzailea);
+					jarraitzaileApustuAnitza(a2);
 				}
 				db.persist(apustu);
 			}
@@ -485,19 +475,18 @@ public User isLogin(String log, String password) {
 		db.getTransaction().commit();
 	}
 
-	private void jarraitzaileApustuAnitza(Apustua apustu, Date data, double zenbatekoa, Mugimendua m,
-			String jarraitzailea) {
-		Erregistratua jarraitzaileaErreg = db.find(domain.Erregistratua.class, jarraitzailea);
-		if(jarraitzaileaErreg.getKontuDirua()>=zenbatekoa && jarraitzaileaErreg.isBanned()==false) {
-		jarraitzaileaErreg.addMovement(m);
-		jarraitzaileaErreg.setKontuDirua(jarraitzaileaErreg.getKontuDirua() - apustu.getZenbatekoa());
-		Apustua jarraitzaileApustua = new Apustua(jarraitzailea,apustu.getZenbatekoa());
-		jarraitzaileApustua.setErantzunak(apustu.getErantzunak());
-		jarraitzaileApustua.setErantzunKop(apustu.getErantzunak().size());
+	private void jarraitzaileApustuAnitza(ApustuaInfo a) {
+		Erregistratua jarraitzaileaErreg = db.find(domain.Erregistratua.class, a.getJarraitzailea());
+		if(jarraitzaileaErreg.getKontuDirua()>=a.getZenbatekoa() && jarraitzaileaErreg.isBanned()==false) {
+		jarraitzaileaErreg.addMovement(a.getMove());
+		jarraitzaileaErreg.setKontuDirua(jarraitzaileaErreg.getKontuDirua() - a.getApustua().getZenbatekoa());
+		Apustua jarraitzaileApustua = new Apustua((String)a.getJarraitzailea(),a.getApustua().getZenbatekoa());
+		jarraitzaileApustua.setErantzunak(a.getApustua().getErantzunak());
+		jarraitzaileApustua.setErantzunKop(a.getApustua().getErantzunak().size());
 		jarraitzaileaErreg.addApustua(jarraitzaileApustua);
 		}else {
 			String deskribapena2=("Ezin izan da Apustua kopiatu. ");
-			Mugimendua m2=new Mugimendua(data,0,deskribapena2);
+			Mugimendua m2=new Mugimendua(a.getData(),0,deskribapena2);
 			jarraitzaileaErreg.addMovement(m2);
 		}
 	}
@@ -527,25 +516,10 @@ public User isLogin(String log, String password) {
 	
 	public void emaitzaGehitu(Question q, String emaitza) {
 		db.getTransaction().begin();
-		boolean denakAsmatuak=true;
-		float biderkatzaileTotala=0;
 		System.out.println(">> DataAccess: getAllBets");
 		TypedQuery<Apustua> query = db.createQuery("SELECT ap FROM Apustua ap",Apustua.class);   
 		List<Apustua> apustuLista = query.getResultList();
-		for(Apustua ap:apustuLista) {
-			if(ap.isBukatua()==false) {
-				for(Aukera auk:ap.getErantzunak()) {
-					for(Aukera auke:q.getAukerak()) {
-						if(auke.getAukeraID()==auk.getAukeraID() &&  auk.getAukeraIzena().equals(emaitza)) {
-							auk.setEgoera("win");
-						    if(ap.getErantzunKop()==1) {
-							  ap.setAsmatua(true);
-						    }
-					    }
-				      }
-			      }
-			}	
-		}
+		this.apustuakAztertu(apustuLista, q, emaitza);
 		System.out.println(">> DataAccess: getAllErreg");
 		TypedQuery<Erregistratua> query2 = db.createQuery("SELECT erreg FROM Erregistratua erreg",Erregistratua.class);   
 		List<Erregistratua> ErregistratuLista = query2.getResultList();
@@ -561,30 +535,52 @@ public User isLogin(String log, String password) {
 					erreg.addMovement(m);
 					apos.setBukatua(true);
 				}else if(apos.getErantzunKop()>1 && apos.isBukatua()==false) { //apustu Anitza da
-					for(Aukera aukera:apos.getErantzunak()) {
-						if(aukera.getEgoera().equals("win")==false) {
-							denakAsmatuak=false;
-						}
-						biderkatzaileTotala = biderkatzaileTotala + aukera.getKuota();
-					 }
-					if(denakAsmatuak==true) {
-						apos.setAsmatua(true);
-					}if(apos.isAsmatua()==true && apos.isBukatua()==false) {
-						erreg.setKontuDirua(erreg.getKontuDirua() + (apos.getZenbatekoa()* biderkatzaileTotala));
-						Date data=new Date();
-						double zenbatekoa=apos.getZenbatekoa()* biderkatzaileTotala;
-						String deskribapena="apustu Anitza irabazi. Dirua=+";
-						Mugimendua m=new Mugimendua(data,zenbatekoa,deskribapena);
-						db.persist(m);
-						erreg.addMovement(m);
-						apos.setBukatua(true);
-					} //if
+					this.emaitzaGehituApustuAnitza(apos, erreg);
 				}//else if
 			}//for
 		}//for
 		db.getTransaction().commit();
 	}
 
+	public void apustuakAztertu(List<Apustua> apustuLista, Question q, String emaitza) {
+		for(Apustua ap:apustuLista) {
+			if(ap.isBukatua()==false) {
+				for(Aukera auk:ap.getErantzunak()) {
+					for(Aukera auke:q.getAukerak()) {
+						if(auke.getAukeraID()==auk.getAukeraID() &&  auk.getAukeraIzena().equals(emaitza)) {
+							auk.setEgoera("win");
+						    if(ap.getErantzunKop()==1) {
+							  ap.setAsmatua(true);
+						    }
+					    }
+				      }
+			      }
+			}	
+		}
+	}
+	public void emaitzaGehituApustuAnitza(Apustua apos, Erregistratua erreg) {
+		boolean denakAsmatuak=true;
+		float biderkatzaileTotala=0;
+		for(Aukera aukera:apos.getErantzunak()) {
+			if(aukera.getEgoera().equals("win")==false) {
+				denakAsmatuak=false;
+			}
+			biderkatzaileTotala = biderkatzaileTotala + aukera.getKuota();
+		 }
+		if(denakAsmatuak==true) {
+			apos.setAsmatua(true);
+		}if(apos.isAsmatua()==true && apos.isBukatua()==false) {
+			erreg.setKontuDirua(erreg.getKontuDirua() + (apos.getZenbatekoa()* biderkatzaileTotala));
+			Date data=new Date();
+			double zenbatekoa=apos.getZenbatekoa()* biderkatzaileTotala;
+			String deskribapena="apustu Anitza irabazi. Dirua=+";
+			Mugimendua m=new Mugimendua(data,zenbatekoa,deskribapena);
+			db.persist(m);
+			erreg.addMovement(m);
+			apos.setBukatua(true);
+		} //if
+	}
+	
 	
 	public User userItzuli(String log) {
 		db.getTransaction().begin();
@@ -604,10 +600,10 @@ public User isLogin(String log, String password) {
 		return null;
 	}
 	
+	String adminAmets="adminAmets";
 	public Admin adminaItzuli() {
 		db.getTransaction().begin();
-		String n="adminAmets";
-		Admin a=db.find(domain.Admin.class,n);
+		Admin a=db.find(domain.Admin.class,adminAmets);
 		db.getTransaction().commit();
 		return a;
 	}
@@ -633,7 +629,7 @@ public User isLogin(String log, String password) {
 	public void mezuaBidaliAdminari(Date data,Erregistratua bidaltzailea,String mezua) {
 		db.getTransaction().begin();
 		Erregistratua erreg=db.find(domain.Erregistratua.class, bidaltzailea.getUser());
-		Admin a=db.find(domain.Admin.class,"adminAmets");
+		Admin a=db.find(domain.Admin.class,adminAmets);
 		Mezua m=new Mezua(data,erreg.getUser(),mezua);
 		a.addMezua(m);
 		db.persist(m);
