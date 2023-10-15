@@ -102,7 +102,9 @@ public class ConfigXML {
 
 			  
 			  
-				
+			 dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			 dbFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+			 dbFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 
 			  dbFilename = getTagValue("dbFilename", config);
 
