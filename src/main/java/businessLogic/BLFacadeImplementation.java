@@ -16,6 +16,7 @@ import domain.Apustua;
 import domain.Aukera;
 import domain.Erregistratua;
 import domain.Event;
+import domain.MezuaInfo;
 import exceptions.EventFinished;
 import exceptions.QuestionAlreadyExist;
 
@@ -260,9 +261,9 @@ public BLFacadeImplementation(DataAccess da)  {
     }
     
     @WebMethod
-    public void mezuaErantzunErregistratuari(Date data, Admin admin, String bidaltzailea,String mezua) {
+    public void mezuaErantzunErregistratuari(MezuaInfo m) {
     	dbManager.open(false);
-    	dbManager.mezuaErantzunErregistratuari(data, admin, bidaltzailea, mezua);
+    	dbManager.mezuaErantzunErregistratuari(m);
     	dbManager.close();
     }
     

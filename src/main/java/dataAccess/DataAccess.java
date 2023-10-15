@@ -25,6 +25,7 @@ import domain.Editorea;
 import domain.Erregistratua;
 import domain.Event;
 import domain.Mezua;
+import domain.MezuaInfo;
 import domain.Mugimendua;
 import domain.Question;
 import domain.User;
@@ -442,37 +443,45 @@ public User isLogin(String log, String password) {
 		Erregistratua erreg = db.find(domain.Erregistratua.class, apustu.getLog());
 		db.getTransaction().begin();
 		if(apustu.getErantzunKop()<=1) {
-			Date data=new Date();
-			double zenbatekoa=apustu.getZenbatekoa();
-			String deskribapena="Apustua egin. Dirua: -";
-			Mugimendua m=new Mugimendua(data,zenbatekoa,deskribapena);
-			db.persist(m);
-			erreg.addMovement(m);
-			erreg.setKontuDirua(erreg.getKontuDirua() - apustu.getZenbatekoa());
-			erreg.addApustua(apustu);
-			for(String jarraitzailea: erreg.getJarraitzaileak()) {
-				ApustuaInfo a = new ApustuaInfo(apustu, data, zenbatekoa, m, jarraitzailea);
-				jarraitzaileenApustuBakarra(a);
-			}
-			db.persist(apustu);	
+			apustuBakarra(apustu, erreg);	
 		}else { //apustu Anitza da
 			if(hautatutakoAukera.isAzkenaDa() == true) {
-				Date data=new Date();
-				double zenbatekoa=apustu.getZenbatekoa();
-				String deskribapena="Apustu Anitza egin. Dirua: -";
-				Mugimendua m=new Mugimendua(data,zenbatekoa,deskribapena);
-				db.persist(m);
-				erreg.addMovement(m);
-				erreg.setKontuDirua(erreg.getKontuDirua() - apustu.getZenbatekoa());
-				erreg.addApustua(apustu);
-				for(String jarraitzailea: erreg.getJarraitzaileak()) {
-					ApustuaInfo a2 = new ApustuaInfo(apustu, data, zenbatekoa, m, jarraitzailea);
-					jarraitzaileApustuAnitza(a2);
-				}
-				db.persist(apustu);
+				apustuAnitza(apustu, erreg);
 			}
 		}
 		db.getTransaction().commit();
+	}
+
+	private void apustuAnitza(Apustua apustu, Erregistratua erreg) {
+		Date data=new Date();
+		double zenbatekoa=apustu.getZenbatekoa();
+		String deskribapena="Apustu Anitza egin. Dirua: -";
+		Mugimendua m=new Mugimendua(data,zenbatekoa,deskribapena);
+		db.persist(m);
+		erreg.addMovement(m);
+		erreg.setKontuDirua(erreg.getKontuDirua() - apustu.getZenbatekoa());
+		erreg.addApustua(apustu);
+		for(String jarraitzailea: erreg.getJarraitzaileak()) {
+			ApustuaInfo a2 = new ApustuaInfo(apustu, data, zenbatekoa, m, jarraitzailea);
+			jarraitzaileApustuAnitza(a2);
+		}
+		db.persist(apustu);
+	}
+
+	private void apustuBakarra(Apustua apustu, Erregistratua erreg) {
+		Date data=new Date();
+		double zenbatekoa=apustu.getZenbatekoa();
+		String deskribapena="Apustua egin. Dirua: -";
+		Mugimendua m=new Mugimendua(data,zenbatekoa,deskribapena);
+		db.persist(m);
+		erreg.addMovement(m);
+		erreg.setKontuDirua(erreg.getKontuDirua() - apustu.getZenbatekoa());
+		erreg.addApustua(apustu);
+		for(String jarraitzailea: erreg.getJarraitzaileak()) {
+			ApustuaInfo a = new ApustuaInfo(apustu, data, zenbatekoa, m, jarraitzailea);
+			jarraitzaileenApustuBakarra(a);
+		}
+		db.persist(apustu);
 	}
 
 	private void jarraitzaileApustuAnitza(ApustuaInfo a) {
@@ -546,18 +555,24 @@ public User isLogin(String log, String password) {
 		for(Apustua ap:apustuLista) {
 			if(ap.isBukatua()==false) {
 				for(Aukera auk:ap.getErantzunak()) {
-					for(Aukera auke:q.getAukerak()) {
-						if(auke.getAukeraID()==auk.getAukeraID() &&  auk.getAukeraIzena().equals(emaitza)) {
-							auk.setEgoera("win");
-						    if(ap.getErantzunKop()==1) {
-							  ap.setAsmatua(true);
-						    }
-					    }
-				      }
+					apustukoAukerakAztertu(q, emaitza, ap, auk);
 			      }
 			}	
 		}
 	}
+
+	private void apustukoAukerakAztertu(Question q, String emaitza, Apustua ap, Aukera auk) {
+		for(Aukera auke:q.getAukerak()) {
+			if(auke.getAukeraID()==auk.getAukeraID() &&  auk.getAukeraIzena().equals(emaitza)) {
+				auk.setEgoera("win");
+			    if(ap.getErantzunKop()==1) {
+				  ap.setAsmatua(true);
+			    }
+		    }
+		  }
+	}
+	
+	
 	public void emaitzaGehituApustuAnitza(Apustua apos, Erregistratua erreg) {
 		boolean denakAsmatuak=true;
 		float biderkatzaileTotala=0;
@@ -636,12 +651,14 @@ public User isLogin(String log, String password) {
 		db.getTransaction().commit();
 	}
 	
-	public void mezuaErantzunErregistratuari(Date data, Admin admin, String bidaltzailea, String mezua) {
+	
+	
+	public void mezuaErantzunErregistratuari(MezuaInfo m) {
 		db.getTransaction().begin();
-		System.out.println(bidaltzailea);
-		Erregistratua erreg=db.find(domain.Erregistratua.class, bidaltzailea);
-		Mezua m=new Mezua(data,admin.getUser(),mezua);
-		erreg.addMezua(m);
+		System.out.println(m.getBidaltzailea());
+		Erregistratua erreg=db.find(domain.Erregistratua.class, m.getBidaltzailea());
+		Mezua mezua=new Mezua(m.getData(),m.getAdmin().getUser(),m.getMezua());
+		erreg.addMezua(mezua);
 		db.persist(m);
 		db.getTransaction().commit();
 	}

@@ -15,6 +15,7 @@ import domain.Apustua;
 import domain.Aukera;
 import domain.Erregistratua;
 import domain.Event;
+import domain.MezuaInfo;
 import exceptions.EventFinished;
 import exceptions.QuestionAlreadyExist;
 
@@ -105,7 +106,7 @@ public interface BLFacade  {
 	
 	@WebMethod public void mezuaBidaliAdminari(Date data,Erregistratua bidaltzailea,String mezua);
 	
-	@WebMethod public void mezuaErantzunErregistratuari(Date data,Admin admin,String bidaltzailea,String mezua);
+	@WebMethod public void mezuaErantzunErregistratuari(MezuaInfo m);
 	
 	@WebMethod public Vector<Event> getAllEvents();
 	

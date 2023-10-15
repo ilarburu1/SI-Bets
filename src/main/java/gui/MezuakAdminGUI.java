@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.swing.*;
 import domain.Admin;
 import domain.Mezua;
+import domain.MezuaInfo;
 import businessLogic.BLFacade;
 import java.awt.Color;
 import java.awt.Font;
@@ -258,7 +259,8 @@ public class MezuakAdminGUI extends JFrame {
 					String mezua=textField.getText();
 					Date data= new Date();
 					Admin a=negozioLogika.adminaItzuli();
-					negozioLogika.mezuaErantzunErregistratuari(data, a, bidaltzaileIzena, mezua);
+					MezuaInfo m = new MezuaInfo(data, a, bidaltzaileIzena, mezua);
+					negozioLogika.mezuaErantzunErregistratuari(m);
 					redibujar();
 				}
 			});
