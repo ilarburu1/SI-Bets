@@ -20,7 +20,7 @@ import domain.User;
 import exceptions.QuestionAlreadyExist;
 import test.dataAccess.TestDataAccess;
 
-public class findQuestionDABTest2 {
+public class findQuestion2DABTest {
 
 	 //sut:system under test
 	 static DataAccessFindQuestion sut=new DataAccessFindQuestion();
