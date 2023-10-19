@@ -535,7 +535,7 @@ public User isLogin(String log, String password) {
 		List<Erregistratua> ErregistratuLista = query2.getResultList();
 		for(Erregistratua erreg:ErregistratuLista) {
 			for(Apustua apos:erreg.getApustuak()) {
-				if(apos.getErantzunKop()==1 && apos.isAsmatua()==true && apos.isBukatua()==false) {
+				if(apos.getErantzunKop()==1 && apos.isAsmatua() && !apos.isBukatua()) {
 					erreg.setKontuDirua(erreg.getKontuDirua()+ (apos.getZenbatekoa()*apos.getErantzunak().get(0).getKuota()));
 					Date data=new Date();
 					String deskribapena="Apustua irabazi. Dirua= +";
