@@ -35,7 +35,7 @@ import exceptions.QuestionAlreadyExist;
 /**
  * It implements the data access to the objectDb database
  */
-public class DataAccessFindQuestion  {
+public class DataAccessIsLogin  {
 	protected static EntityManager  db;
 	protected static EntityManagerFactory emf;
 
@@ -43,14 +43,14 @@ public class DataAccessFindQuestion  {
 	ConfigXML c=ConfigXML.getInstance();
 	
 
-     public DataAccessFindQuestion(boolean initializeMode)  {
+     public DataAccessIsLogin(boolean initializeMode)  {
 		
     	System.out.println("Creating DataAccess instance => isDatabaseLocal: "+c.isDatabaseLocal()+" getDatabBaseOpenMode: "+c.getDataBaseOpenMode());
 
  		open(initializeMode);
 	}
 
-	public DataAccessFindQuestion()  {	
+	public DataAccessIsLogin()  {	
 		this(false);
 	}
 	
@@ -252,20 +252,32 @@ public void open(boolean initializeMode){
 	//NIRE METODOA*************************************************************************
 	
 	
-
-
-     public Question findQuestion(Event event, String galdera) {
- 		Event event1 = db.find(domain.Event.class, event);
- 		Vector<Question> galderak = event1.getQuestions();
- 		if(galderak.isEmpty()) {
- 			return null;
- 		}else{
- 			for(Question question:galderak) {
- 				if(question.getQuestion().equals(galdera)) return question;
- 			}
- 		}
- 		return null;
- 	}
+public User isLogin(String log, String password) {
+	    
+		
+		User user = db.find(domain.Erregistratua.class, log );
+		db.getTransaction().begin();
+		if(user!=null){
+			if( ((Erregistratua)user).isBanned()) {
+				Date data = new Date();
+				if( ((Erregistratua)user).getBanEndDate().compareTo(data)<=0) {
+					((Erregistratua)user).setBanned(false);
+				}
+			}
+			db.getTransaction().commit();
+			return user;
+		}else {
+			user = db.find(domain.Editorea.class, log);
+			if(user!=null){
+				db.getTransaction().commit();
+				return user;
+			}else {
+				user = db.find(domain.Admin.class, log);
+			}
+		}
+		db.getTransaction().commit();
+		return user;
+	}
     
 	
 	
