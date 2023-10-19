@@ -10,6 +10,7 @@ import java.util.Date;
 import org.junit.Test;
 
 import dataAccess.DataAccess;
+import dataAccess.DataAccessFindQuestion;
 import domain.Admin;
 import domain.Editorea;
 import domain.Erregistratua;
@@ -22,7 +23,7 @@ import test.dataAccess.TestDataAccess;
 public class findQuestionDABTest2 {
 
 	 //sut:system under test
-	 static DataAccess sut=new DataAccess();
+	 static DataAccessFindQuestion sut=new DataAccessFindQuestion();
 	 
 	 //additional operations needed to execute the test 
 	 static TestDataAccess testDA=new TestDataAccess();
@@ -30,10 +31,11 @@ public class findQuestionDABTest2 {
 	private Event ev;
 	private String g;
 	
-	/*
+	
 	@Test
 	//Ebentua null da.
 	public void test1() {
+		
 		try {
 			
 			//define paramaters
@@ -53,12 +55,14 @@ public class findQuestionDABTest2 {
 			}
 			
 				
-				
+			
 	}
-	*/
+	
+	
 	@Test
 	//Galdera null da
 	public void test2() {
+		
 		try {
 			int evZenb=14;
 			String des="Barsa-Real Madrid";
@@ -98,11 +102,14 @@ public class findQuestionDABTest2 {
 				testDA.close();
 		      //System.out.println("Finally "+b);          
 		    }
+		    
 	}
+	
 	
 	@Test
 	//Ebentua ez dago DBan
 	public void test3() {
+		
 		try {
 			//define paramaters
 			int evZenb=7;
@@ -126,11 +133,15 @@ public class findQuestionDABTest2 {
 			// if the program goes to this point fail  
 			assertTrue(true);
 		   }
+		   
 	}
+	
+	
 	
 	@Test
 	//Ebentua DBan dago baina ez du galderarik.
 	public void test4() {
+		
 		try {
 			
 			//define paramaters
@@ -170,11 +181,15 @@ public class findQuestionDABTest2 {
 		          testDA.close();
 		      //     System.out.println("Finally "+b);          
 		        }
+		         
 	}
-
+	
+   
+	/*
 	@Test
 	//Ebentua DBan dago baina galdera ez ebentuan.
 	public void test5() {
+		
 		Question q1=new Question(100,"Zeinek irabazi?");
 		try {
 			
@@ -217,11 +232,14 @@ public class findQuestionDABTest2 {
 		          testDA.close();
 		      //     System.out.println("Finally "+b);          
 		        }
+		        
 	}
-	
+	*/
+	/*
 	@Test
 	//Ebentua DBan dago eta galdera ebentuan agertzen da.
 	public void test6() {
+		
 		Question q1=new Question(100,"Zeinek irabazi?");
 		try {
 			
@@ -264,5 +282,7 @@ public class findQuestionDABTest2 {
 		          testDA.close();
 		      //     System.out.println("Finally "+b);          
 		        }
+		        
 	}
+	*/
 }
